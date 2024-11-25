@@ -1,0 +1,86 @@
+typedef struct Node {
+    int north;
+    int east;
+    int south;
+    int west;
+    struct Node* next;
+} Node;
+Node* createNode(int n, int e, int s, int w) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->north = n;
+    newNode->east = e;
+    newNode->south = s;
+    newNode->west = w;
+    newNode->next = NULL;
+    return newNode;
+}
+void appendNode(Node** head_ref, int n, int e, int s, int w) {
+    Node* newNode = createNode(n, e, s, w);
+    Node* last = *head_ref;
+
+    if (*head_ref == NULL) {
+        *head_ref = newNode;
+        return;
+    }
+
+    while (last->next != NULL) {
+        last = last->next;
+    }
+
+    last->next = newNode;
+}
+void displaySignal(int count) {
+    if (count < 10) {
+        printf("Signal: Red\n");
+    } else if (count >= 10 && count <= 15) {
+        printf("Signal: Yellow\n");
+    } else {
+        printf("Signal: Green\n");
+    }
+}
+void processTraffic(Node* head, int duration, int cycles) {
+    for (int i = 0; i < cycles; i++) {
+        Node* node = head;
+        printf("Cycle %d:\n", i + 1);
+        while (node != NULL) {
+            printf("North: %d vehicles, ", node->north);
+            displaySignal(node->north);
+            printf("East: %d vehicles, ", node->east);
+            displaySignal(node->east);
+            printf("South: %d vehicles, ", node->south);
+            displaySignal(node->south);
+            printf("West: %d vehicles, ", node->west);
+            displaySignal(node->west);
+
+            printf("Signal duration: %d seconds\n\n", duration);
+            node = node->next;
+        }
+    }
+}
+int main() {
+    Node* head = NULL;
+    int cycles, duration, n, e, s, w;
+
+    printf("Enter the number of cycles: ");
+    scanf("%d", &cycles);
+    printf("Enter the signal duration in seconds: ");
+    scanf("%d", &duration);
+
+    for (int i = 0; i < cycles; i++) {
+        printf("Cycle %d:\n", i + 1);
+        printf("Enter vehicle count for North: ");
+        scanf("%d", &n);
+        printf("Enter vehicle count for East: ");
+        scanf("%d", &e);
+        printf("Enter vehicle count for South: ");
+        scanf("%d", &s);
+        printf("Enter vehicle count for West: ");
+        scanf("%d", &w);
+
+        appendNode(&head, n, e, s, w);
+    }
+
+    processTraffic(head, duration, cycles);
+
+    return 0;
+}
